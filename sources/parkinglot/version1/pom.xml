@@ -11,6 +11,7 @@
 
     <modules>
         <module>carpark</module>
+        <module>dashboard</module>
         <module>gate</module>
         <module>statsbase</module>
     </modules>
@@ -21,6 +22,11 @@
             <dependency>
                 <groupId>cz.zcu.kiv.relisa.data.parking</groupId>
                 <artifactId>carpark</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cz.zcu.kiv.relisa.data.parking</groupId>
+                <artifactId>dashboard</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
