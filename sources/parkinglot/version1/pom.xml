@@ -11,12 +11,23 @@
 
     <modules>
         <module>carpark</module>
+        <module>gate</module>
         <module>statsbase</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
             <!-- parking modules-->
+            <dependency>
+                <groupId>cz.zcu.kiv.relisa.data.parking</groupId>
+                <artifactId>carpark</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cz.zcu.kiv.relisa.data.parking</groupId>
+                <artifactId>gate</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>cz.zcu.kiv.relisa.data.parking</groupId>
                 <artifactId>statsbase</artifactId>

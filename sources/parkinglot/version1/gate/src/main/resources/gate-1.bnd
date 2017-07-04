@@ -1,0 +1,10 @@
+Bundle-SymbolicName: obcc-parking-example.gate-svc
+Bundle-Version: 1
+Private-Package: cz.zcu.kiv.relisa.data.parking.gate,\
+	cz.zcu.kiv.relisa.data.parking.gate.statistics.impl,\
+	cz.zcu.kiv.relisa.data.parking.lane.statistics.impl
+Bundle-Activator: cz.zcu.kiv.relisa.data.parking.gate.GateActivator
+Export-Package: cz.zcu.kiv.relisa.data.parking.gate.statistics,\
+	cz.zcu.kiv.relisa.data.parking.lane.statistics
+X-ParkingExample-BundleRev: 1
+ 
