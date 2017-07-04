@@ -1,0 +1,9 @@
+Bundle-SymbolicName: obcc-parking-example.carpark-svc
+Private-Package: cz.zcu.kiv.relisa.data.parking.carpark,\
+	cz.zcu.kiv.relisa.data.parking.carpark.flow.impl,\
+	cz.zcu.kiv.relisa.data.parking.carpark.status.impl
+Bundle-Version: 1
+Bundle-Activator: cz.zcu.kiv.relisa.data.parking.carpark.CarParkActivator
+Export-Package: cz.zcu.kiv.relisa.data.parking.carpark.flow,\
+	cz.zcu.kiv.relisa.data.parking.carpark.status
+X-ParkingExample-BundleRev: 1
