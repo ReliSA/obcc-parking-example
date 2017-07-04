@@ -11,10 +11,19 @@
 
     <modules>
         <module>carpark</module>
+        <module>statsbase</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <!-- parking modules-->
+            <dependency>
+                <groupId>cz.zcu.kiv.relisa.data.parking</groupId>
+                <artifactId>statsbase</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- 3rd-party -->
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.core</artifactId>
