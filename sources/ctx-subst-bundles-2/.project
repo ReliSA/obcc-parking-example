@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>ctx-subst-bundles-2.svc</name>
+	<name>ctx-subst-bundles-2</name>
 	<comment></comment>
 	<projects>
+		<project>cnf</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
