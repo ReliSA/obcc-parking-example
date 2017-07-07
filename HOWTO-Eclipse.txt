@@ -3,9 +3,9 @@ To set up the projects for app revisions correctly in Eclipse, it is needed to
 import the projects as plain Java projects and then
 
 * set source folders to the "src/" subfolder
-* add JARs of org.osgi.core 4.2 , slf4j api to classpath (as external JARs or user libraries)
+* add JARs of org.osgi.core 4.2 , slf4j api to classpath (as external JARs or user libraries) -- they are in the "lib/" folder of the "cnf" project, as a kind of hack since the cnf project (a bndtools configuration) does not use the lib/ folder
 * add to classpath as JARs (not "external JARs") the missing bundles, taking them from 
   the "generated/" folders of preceding app revisions -- see the table in PDF in doc/ folder 
   to get the reference list of which bundle from which app revision project to add where
 * make sure that the JDK library is in project's classpath (sometimes the import left it out)
-
+* to test the bundles if bndtools is not able to launch the framework: if it at least generates their JARs, take a Felix installation, copy all the files from the "cnf" project "lib/" folder plus the generated bundles into the Felix "bundle/" folder, start the framework; if some bundles do not start because "some service unavailable, exiting", then just start the given bundles again manually
