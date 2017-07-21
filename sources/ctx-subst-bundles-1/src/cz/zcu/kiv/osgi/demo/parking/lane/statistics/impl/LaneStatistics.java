@@ -63,7 +63,7 @@ public class LaneStatistics implements ILaneStatistics
 	public void vehiclesPassing(int cnt)
 	{
 		vehicleCount += cnt;
-		logger.info(getIdentification()+": increased count by {} to {}", cnt, vehicleCount);
+		logger.info(getIdentification()+": increased vehicles passed count by {} to {}", cnt, vehicleCount);
 	}
 	
 }

@@ -65,7 +65,7 @@ public class GateStatistics implements IGateStatistics
 			parkingPlace.arrive();
 			entered++;
 		}
-		logger.info(getIdentification()+": get entering {}", entered);
+		logger.info(getIdentification()+": {} total vehicles entered", entered);
 		return entered;
 	}
 
@@ -79,7 +79,7 @@ public class GateStatistics implements IGateStatistics
 			parkingPlace.leave();
 			leaved++;
 		}
-		logger.info(getIdentification()+": get leaving {}", leaved);
+		logger.info(getIdentification()+": {} total vehicles left", leaved);
 		return leaved;
 	}
 
@@ -88,7 +88,7 @@ public class GateStatistics implements IGateStatistics
 	public int getEventCount()
 	{
 		int cnt = getNumberOfVehiclesEntering()+getNumberOfVehiclesLeaving();
-		logger.info(getIdentification()+": get count {}", cnt);
+		logger.info(getIdentification()+": {} total enter/leave events", cnt);
 		return cnt;
 	}
 	

@@ -39,7 +39,7 @@ public class DashboardActivator implements BundleActivator
 		ServiceReference sr;
 		sr = context.getServiceReference(ICountingStatistics.class.getName());
 		if (sr == null) {
-			logger.error(lid+": no gate stats registered");
+			logger.error(lid+": no gate stats service registered");
 		}
 		else {
 			gateStats = (ICountingStatistics) context.getService(sr);
@@ -47,13 +47,13 @@ public class DashboardActivator implements BundleActivator
 				logger.error(lid+": no gate stats service available");
 			}
 			else {
-				logger.info(lid+": got gate stats");
+				logger.info(lid+": got gate stats service");
 			}
 		}
 
 		sr = context.getServiceReference(ILaneStatistics.class.getName());
 		if (sr == null) {
-			logger.error(lid+": no lane stats registered");
+			logger.error(lid+": no lane stats service registered");
 		}
 		else {
 			laneStats = (ILaneStatistics) context.getService(sr);
@@ -61,13 +61,13 @@ public class DashboardActivator implements BundleActivator
 				logger.error(lid+": no lane stats service available");
 			}
 			else {
-				logger.info(lid+": got lane stats");
+				logger.info(lid+": got lane stats service");
 			}
 		}
 
 		if (gateStats == null || laneStats == null) {
-			logger.error(lid+": some service unavailable, exiting");
-			throw new BundleException(lid+": some service unavailable, exiting");
+			logger.error(lid+": gate and/or lane stats service unavailable, exiting");
+			throw new BundleException(lid+": gate and/or lane stats service unavailable, exiting");
 		}
 
 		// requirements ok, go ahead

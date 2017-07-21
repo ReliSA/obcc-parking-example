@@ -42,7 +42,7 @@ public class GateActivator implements BundleActivator
 		
 		ServiceReference sr = context.getServiceReference(IVehicleFlow.class.getName());
 		if (sr == null) {
-			logger.error(lid+": no parking registered");
+			logger.error(lid+": no parking service registered");
 		}
 		else {
 			parking = (IVehicleFlow) context.getService(sr);
@@ -55,8 +55,8 @@ public class GateActivator implements BundleActivator
 		}
 
 		if (parking == null) {
-			logger.error(lid+": some service unavailable, exiting");
-			throw new BundleException(lid+": some service unavailable, exiting");
+			logger.error(lid+": parking service unavailable, exiting");
+			throw new BundleException(lid+": parking service unavailable, exiting");
 		}
 
 		// provided services

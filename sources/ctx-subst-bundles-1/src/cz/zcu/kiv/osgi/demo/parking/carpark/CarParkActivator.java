@@ -6,6 +6,8 @@ import org.osgi.framework.ServiceException;
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.PatternLayout;
 
 import cz.zcu.kiv.osgi.demo.parking.carpark.flow.IVehicleFlow;
 import cz.zcu.kiv.osgi.demo.parking.carpark.flow.impl.VehicleFlow;
@@ -17,11 +19,17 @@ public class CarParkActivator implements BundleActivator
 	
 	private Logger logger;
 	private static final String lid = "CarPark.r1 Activator";
+	
 	private ServiceRegistration statusSvcReg;
 	private ServiceRegistration flowSvcReg;
 
 	public CarParkActivator()
 	{
+		// Since the CarPark is a leaf component (not depending on any functional one), we initialize
+		// the logging backend for the whole application here. 
+		String lf = "%d{HH:mm:ss,SSS} %-5p - %m%n";
+		// Log4J 1.2 provides a simple programmatic configuration (unlike log4j2), and the SLF4J logger picks it up.
+		org.apache.log4j.BasicConfigurator.configure(new ConsoleAppender(new PatternLayout(lf)));
 		this.logger = LoggerFactory.getLogger("parking-demo");
 	}
 
@@ -33,8 +41,8 @@ public class CarParkActivator implements BundleActivator
 		statusSvcReg = context.registerService(IParkingStatus.class.getName(), ParkingStatus.getInstance(), null);
 		if (statusSvcReg == null)
 			throw new ServiceException("Carpark.r1: IParkingStatus svc registration failed");
-		logger.info(lid+": registered svc ", context.getService(statusSvcReg.getReference()).getClass());
-
+		logger.info(lid+"{}: registered svc ", context.getService(statusSvcReg.getReference()).getClass());
+		
 		flowSvcReg = context.registerService(IVehicleFlow.class.getName(), VehicleFlow.getInstance(), null);
 		if (null == flowSvcReg) 
 			throw new ServiceException("Carpark.r1: IVehicleFlow svc registration failed");
@@ -48,9 +56,9 @@ public class CarParkActivator implements BundleActivator
 	{
 		logger.info(lid+": stopping");
 		flowSvcReg.unregister();
-		logger.info(lid+": unreg flow svc");
+		logger.info(lid+": unregistered flow svc");
 		statusSvcReg.unregister();
-		logger.info(lid+": unreg status svc");
+		logger.info(lid+": unregistered status svc");
 		logger.info(lid+": stopped.");
 	}
 

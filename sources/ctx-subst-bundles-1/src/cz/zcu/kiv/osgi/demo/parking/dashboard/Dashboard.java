@@ -37,12 +37,13 @@ public class Dashboard implements Runnable
 		
 		gateNum = gateStats.getEventCount();
 		laneNum = laneStats.getCountVehiclesPassed();
-		logger.info(lid+": initial stats -- lane passed {}, gate events {}" , laneNum, gateNum );
+		logger.info("*** "+lid+": STARTING RUN ({} cycles)", NUM_CYCLES);
+		logger.info("*** "+lid+": initial stats -- lane vehicles passed {}, gate events {}" , laneNum, gateNum );
 		for (int i=0; i<NUM_CYCLES; ++i) {
 			logger.info("*** "+lid+": loop {}",i);
 			gateNum = gateStats.getEventCount();
 			laneNum = laneStats.getCountVehiclesPassed();
-			logger.info("*** "+lid+" stats: lane passed {}, gate events {}" , laneNum, gateNum );
+			logger.info("*** "+lid+" stats: lane vehicles passed {}, gate events {}" , laneNum, gateNum );
 			try {
 				Thread.sleep(PAUSE_TIME);
 			}
@@ -52,6 +53,7 @@ public class Dashboard implements Runnable
 			}
 			Thread.yield();
 		}
+		logger.info("*** "+lid+": FINISHED RUN");
 			
 	}
 
