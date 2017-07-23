@@ -8,4 +8,9 @@ import the projects as plain Java projects and then
   the "generated/" folders of preceding app revisions -- see the table in PDF in doc/ folder 
   to get the reference list of which bundle from which app revision project to add where
 * make sure that the JDK library is in project's classpath (sometimes the import left it out)
-* to test the bundles if bndtools is not able to launch the framework: if it at least generates their JARs, take a Felix installation, copy all the files from the "cnf" project "lib/" folder plus the generated bundles into the Felix "bundle/" folder, start the framework; if some bundles do not start because "some service unavailable, exiting", then just start the given bundles again manually
+* bndtools may not be able to launch the framework: if it at least generates their JARs, copy all the files from the "cnf" project "lib/" folder plus the generated bundles into the Felix "bundle/" folder
+
+To test the bundles in plain Felix:
+* cd <Felix installation folder>
+* rm -rf felix-cache/*  ;  java -jar bin/felix.jar
+* in Felix console, manually start the Dashboard bundle which needs to have other services available
