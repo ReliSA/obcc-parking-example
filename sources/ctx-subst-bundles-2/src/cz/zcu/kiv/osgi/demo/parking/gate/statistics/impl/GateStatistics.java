@@ -70,7 +70,7 @@ public class GateStatistics implements IGateStatistics
             parkingPlace.arrive();
             entered++;
         }
-        logger.info(getIdentification() + ": get entering {}, full? {}", entered, parkingStatus.isFull());
+        logger.info(getIdentification()+": {} total vehicles entered, full? {}", entered, parkingStatus.isFull());
         return entered;
     }
 
