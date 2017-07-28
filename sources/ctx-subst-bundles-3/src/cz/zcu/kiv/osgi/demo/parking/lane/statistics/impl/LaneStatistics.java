@@ -15,8 +15,8 @@ public class LaneStatistics implements ILaneStatistics, ILaneUpdate
 	private long timerStart = 0L;
 	
 	/**
-	 * Fake service provisioning.
-	 */
+     * Create service instance.
+     */
 	public static LaneStatistics getInstance()
 	{
 		if (instance == null) {
@@ -28,7 +28,7 @@ public class LaneStatistics implements ILaneStatistics, ILaneUpdate
 	protected LaneStatistics()
 	{
 		logger = LoggerFactory.getLogger("parking-demo");
-		logger.info("LaneStats@Gate.r3 <init>");
+		logger.info(getIdentification()+" <init>");
 		clear();
 	}
 	
@@ -57,13 +57,13 @@ public class LaneStatistics implements ILaneStatistics, ILaneUpdate
     @Override
     public String getIdentification()
     {
-        return "LaneStatistics@Gate";
+        return "LaneStatistics.r3";
     }
 
     @Override
     public int getEventCount()
     {
-        logger.info(getIdentification()+": count {}", vehicleCount); 
+        logger.info(getIdentification()+": vehicles passed count {}", vehicleCount); 
         return vehicleCount;
     }
 
@@ -80,7 +80,7 @@ public class LaneStatistics implements ILaneStatistics, ILaneUpdate
     public void vehiclesPassing(int cnt)
 	{
 		vehicleCount += cnt;
-		logger.info(getIdentification()+": increased count by {} to {}", cnt, vehicleCount);
+		logger.info(getIdentification()+": increased vehicles passed count by {} to {}", cnt, vehicleCount);
 	}
 
 }

@@ -15,7 +15,6 @@ import cz.zcu.kiv.osgi.demo.parking.gate.statistics.impl.GateStatistics;
 import cz.zcu.kiv.osgi.demo.parking.gate.statistics.IGateStatistics;
 import cz.zcu.kiv.osgi.demo.parking.gate.vehiclesink.IVehicleSink;
 import cz.zcu.kiv.osgi.demo.parking.gate.vehiclesink.impl.VehicleSink;
-import cz.zcu.kiv.osgi.demo.parking.lane.TrafficLane;
 import cz.zcu.kiv.osgi.demo.parking.lane.statistics.ILaneStatistics;
 import cz.zcu.kiv.osgi.demo.parking.lane.statistics.impl.LaneStatistics;
 import cz.zcu.kiv.osgi.demo.parking.statsbase.ICountingStatistics;
@@ -52,7 +51,7 @@ public class GateActivator implements BundleActivator
         ServiceReference sr;
         sr = context.getServiceReference(IVehicleFlow.class.getName());
         if (sr == null) {
-            logger.error(lid + ": no parking registered");
+            logger.error(lid + ": no parking service registered");
         }
         else {
             parking = (IVehicleFlow) context.getService(sr);
@@ -78,8 +77,8 @@ public class GateActivator implements BundleActivator
         }
 
         if ((parking == null) || (status == null)) {
-            logger.error(lid + ": some service unavailable, exiting");
-            throw new BundleException(lid + ": some service unavailable, exiting");
+            logger.error(lid + ": parking and/or status service unavailable, exiting");
+            throw new BundleException(lid + ": parking and/or status service unavailable, exiting");
         }
 
         // provided services
@@ -95,7 +94,7 @@ public class GateActivator implements BundleActivator
         gateSvcReg = context.registerService(gateIds, gateStatsImpl, null);
         if (null == gateSvcReg)
             throw new ServiceException(lid + ": gate svc registration failed");
-        logger.info(lid + ": registered svc ", context.getService(gateSvcReg.getReference()).getClass());
+        logger.info(lid + ": registered gate svc {}", context.getService(gateSvcReg.getReference()).getClass());
 
         String[] laneIds = new String[] {
                 ICountingStatistics.class.getName(),
@@ -104,7 +103,7 @@ public class GateActivator implements BundleActivator
         laneSvcReg = context.registerService(laneIds, laneStatsImpl, null);
         if (null == laneSvcReg)
             throw new ServiceException(lid + ": lane svc registration failed");
-        logger.info(lid + ": registered svc ", context.getService(laneSvcReg.getReference()).getClass());
+        logger.info(lid + ": registered lane svc {}", context.getService(laneSvcReg.getReference()).getClass());
 
         String[] sinkIds = new String[] {
                 IVehicleSink.class.getName()
@@ -112,15 +111,15 @@ public class GateActivator implements BundleActivator
         sinkSvcReg = context.registerService(sinkIds, sinkImpl, null);
         if (null == sinkSvcReg)
             throw new ServiceException(lid + ": vehicle sink svc registration failed");
-        logger.info(lid + ": registered svc ", context.getService(sinkSvcReg.getReference()).getClass());
+        logger.info(lid + ": registered sink svc {}", context.getService(sinkSvcReg.getReference()).getClass());
 
         // start traffic simulator ('coz lane stats still provided by this
         // bundle, not the already added TrafficLane)
         TrafficLane lane = new TrafficLane(sinkImpl, laneStatsImpl);
         Thread t = new Thread(lane);
-        logger.info(lid + ": spawn thread");
+        logger.info("(!) " + lid + ": spawning traffic lane thread");
         t.start();
-        logger.info(lid + ": thread spawned");
+        logger.info("(!) " + lid + ": traffic lane thread spawned");
     }
 
     

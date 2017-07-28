@@ -1,4 +1,4 @@
-package cz.zcu.kiv.osgi.demo.parking.lane;
+package cz.zcu.kiv.osgi.demo.parking.gate;
 
 import java.util.Random;
 
@@ -42,13 +42,13 @@ public class TrafficLane implements Runnable
 	@Override
 	public void run()
 	{
-		logger.info("(!) "+lid+": traffic simulation thread starting");
+		logger.info("(!) "+lid+": traffic lane simulation thread starting");
 		Random r = new Random();
 		
 		for (int i = 0; i < NUM_CYCLES; ++i) {
 			logger.info(lid+": loop #{}", i);
 			int batch = r.nextInt(MAX_VEHICLES_IN_BATCH);
-			logger.info(lid+": Generating {} vehicles in the lane", batch);
+			logger.info(lid+": generating {} vehicles in the lane", batch);
 			for (int v = 0; v < batch; ++v) {
 				vehicleSink.consumeVehicle();
 			}
@@ -57,7 +57,7 @@ public class TrafficLane implements Runnable
 				Thread.sleep(PAUSE_TIME);
 			}
 			catch (InterruptedException e) {
-			    logger.warn(lid+": thread interrupted");
+			    logger.warn("(!)"+lid+": thread interrupted");
 				e.printStackTrace();
 			}
 			Thread.yield();

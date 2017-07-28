@@ -47,7 +47,7 @@ public class GateStatistics implements IGateStatistics, IGateUpdate
     protected GateStatistics(IVehicleFlow parking, IParkingStatus status)
     {
         logger = LoggerFactory.getLogger("parking-demo");
-        logger.info(lid + ": <init>");
+        logger.info(getIdentification() + ": <init>");
 
 //        parkingPlace = parking;
         parkingStatus = status;
@@ -59,14 +59,14 @@ public class GateStatistics implements IGateStatistics, IGateUpdate
     @Override
     public void vehiclesArrived(int cntArrived)
     {
-        logger.info("Gate: {} vehicles about to enter", cntArrived);
+        logger.info(getIdentification()+": {} vehicles about to enter", cntArrived);
         entered += cntArrived;
     }
 
     @Override
     public void vehiclesDeparted(int cntDeparted)
     {
-        logger.info("Gate: {} vehicles about to leave", cntDeparted);
+        logger.info(getIdentification()+": {} vehicles about to leave", cntDeparted);
         leaved += cntDeparted;	// FIXME can lead to inconsistent state when
                                // entered < leaved
     }
@@ -74,14 +74,14 @@ public class GateStatistics implements IGateStatistics, IGateUpdate
     @Override
     public int getNumberOfVehiclesEntering()
     {
-        logger.info(getIdentification() + ": get entering {}, full? {}", entered, parkingStatus.isFull());
+        logger.info(getIdentification() + ": {} total vehicles entered, full? {}", entered, parkingStatus.isFull());
         return entered;
     }
 
     @Override
     public int getNumberOfVehiclesLeaving()
     {
-        logger.info(getIdentification() + ": get leaving {}, full? {}", leaved, parkingStatus.isFull());
+        logger.info(getIdentification() + ": {} total vehicles left, full? {}", leaved, parkingStatus.isFull());
         return leaved;
     }
 
@@ -90,7 +90,7 @@ public class GateStatistics implements IGateStatistics, IGateUpdate
     public int getEventCount()
     {
         int cnt = getNumberOfVehiclesEntering() + getNumberOfVehiclesLeaving();
-        logger.info(getIdentification() + ": get count {}", cnt);
+        logger.info(getIdentification() + ": {} total enter/leave events", cnt);
         return cnt;
     }
 

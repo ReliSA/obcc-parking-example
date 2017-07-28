@@ -10,6 +10,12 @@ import cz.zcu.kiv.osgi.demo.parking.gate.vehiclesink.IVehicleSink;
 import cz.zcu.kiv.osgi.demo.parking.carpark.flow.IVehicleFlow;
 
 
+/**
+ * VehicleSink is the "gate" between the road lane (TrafficLane) and the parking lot (VehicleFlow).
+ * 
+ * @author brada
+ *
+ */
 public class VehicleSink implements IVehicleSink
 {
 
@@ -45,13 +51,13 @@ public class VehicleSink implements IVehicleSink
 	@Override
 	public void consumeVehicle()
 	{
-		logger.info(lid+": consume");
+		logger.info(lid+": about to consume 1 vehicle");
 		parkingPlace.arrive();
 		gate.vehiclesArrived(1);
 		// simulate vehicle departure
 		Random r = new Random();
 		int numVehiclesToLeave = r.nextInt(3);
-		logger.info(lid+": dice made {} cars leave", numVehiclesToLeave);
+		logger.info(lid+": dice made {} vehicles leave", numVehiclesToLeave);
 		for (int i=0; i<numVehiclesToLeave; ++i) {
 			parkingPlace.leave();
 			gate.vehiclesDeparted(1);

@@ -6,6 +6,12 @@ import org.slf4j.LoggerFactory;
 import cz.zcu.kiv.osgi.demo.parking.lane.statistics.ILaneStatistics;
 import cz.zcu.kiv.osgi.demo.parking.gate.statistics.IGateStatistics;
 
+/**
+ * Displays statistics of the underlying simulation.
+ * 
+ * @author brada
+ *
+ */
 public class Dashboard implements Runnable
 {
 	// TODO learn how to use config admin service to set these values
@@ -39,17 +45,18 @@ public class Dashboard implements Runnable
 		logger.info("(!)"+lid+": thread starting");
 		gateNum = gateStats.getEventCount();
 		laneNum = laneStats.getCountVehiclesPassed();
-		logger.info(lid+": initial stats -- lane passed {}, gate events {}" , laneNum, gateNum );
+		logger.info("*** "+lid+": STARTING RUN ({} cycles)", NUM_CYCLES);
+		logger.info(lid+": initial stats -- lane vehicles passed {}, gate events {}" , laneNum, gateNum );
 		for (int i=0; i<NUM_CYCLES; ++i) {
 			logger.info("*** "+lid+": loop {}",i);
 			gateNum = gateStats.getEventCount();
 			laneNum = laneStats.getCountVehiclesPassed();
-			logger.info("*** "+lid+" stats: lane passed {}, gate events {}" , laneNum, gateNum );
+			logger.info("*** "+lid+" stats: lane vehicles passed {}, gate events {}" , laneNum, gateNum );
 			try {
 				Thread.sleep(PAUSE_TIME);
 			}
 			catch (InterruptedException e) {
-				logger.warn(lid+": thread interrupted");
+				logger.warn("(!)"+lid+": thread interrupted");
 				e.printStackTrace();
 			}
 			Thread.yield();
@@ -57,9 +64,10 @@ public class Dashboard implements Runnable
 
 		logger.info("(!)"+lid+": thread stopping");
 		
+		logger.info("*** "+lid+": FINISHED RUN");
 		logger.info("-----");
 		logger.info(lid+": final stats: lane events {}" , laneStats.getEventCount() );
-		logger.info(lid+": final stats: lane vehicles {}", laneStats.getCountVehiclesPassed() );
+		logger.info(lid+": final stats: lane vehicles passed {}", laneStats.getCountVehiclesPassed() );
 		logger.info(lid+": final stats: gate events {}" , gateStats.getEventCount() );
 		logger.info(lid+": final stats: gate entered {}", gateStats.getNumberOfVehiclesEntering() );
 		logger.info(lid+": final stats: gate leaved  {}",  gateStats.getNumberOfVehiclesLeaving() );
