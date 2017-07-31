@@ -47,12 +47,12 @@ public class TrafficLane implements Runnable
 		
 		for (int i = 0; i < NUM_CYCLES; ++i) {
 			logger.info(lid+": loop #{}", i);
-			int batch = r.nextInt(MAX_VEHICLES_IN_BATCH);
-			logger.info(lid+": generating {} vehicles in the lane", batch);
-			for (int v = 0; v < batch; ++v) {
-				vehicleSink.consumeVehicle();
-			}
-			lane.vehiclesPassing(batch);
+			int vehiclesIn  = r.nextInt(MAX_VEHICLES_IN_BATCH);
+			int vehiclesOut = r.nextInt(MAX_VEHICLES_IN_BATCH);
+			logger.info(lid+": simulate {} entering and {} leaving vehicles",
+					vehiclesIn, vehiclesOut);
+			vehicleSink.exchangeVehicles(vehiclesIn, vehiclesOut);
+			lane.vehiclesPassing(vehiclesIn);
 			try {
 				Thread.sleep(PAUSE_TIME);
 			}

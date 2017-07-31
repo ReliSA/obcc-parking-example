@@ -1,7 +1,5 @@
 package cz.zcu.kiv.osgi.demo.parking.gate.vehiclesink.impl;
 
-import java.util.Random;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,19 +47,19 @@ public class VehicleSink implements IVehicleSink
 	}
 	
 	@Override
-	public void consumeVehicle()
+	public void exchangeVehicles(int numIn, int numOut)
 	{
-		logger.info(lid+": about to consume 1 vehicle");
-		parkingPlace.arrive();
-		gate.vehiclesArrived(1);
-		// simulate vehicle departure
-		Random r = new Random();
-		int numVehiclesToLeave = r.nextInt(3);
-		logger.info(lid+": dice made {} vehicles leave", numVehiclesToLeave);
-		for (int i=0; i<numVehiclesToLeave; ++i) {
-			parkingPlace.leave();
-			gate.vehiclesDeparted(1);
+		logger.info(lid+": about to exchange {}/{} in/out vehicles at gate", numIn, numOut);
+		// simulate vehicle arrival
+		for (int i=0; i<numIn; ++i) {
+			parkingPlace.arrive();
 		}
+		gate.vehiclesArrived(numIn);
+		// simulate vehicle departure
+		for (int i=0; i<numOut; ++i) {
+			parkingPlace.leave();
+		}
+		gate.vehiclesDeparted(numOut);
 	}
 
 }
