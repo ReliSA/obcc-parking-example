@@ -13,8 +13,6 @@ import cz.zcu.kiv.osgi.demo.parking.carpark.flow.IVehicleFlow;
 import cz.zcu.kiv.osgi.demo.parking.carpark.status.IParkingStatus;
 import cz.zcu.kiv.osgi.demo.parking.gate.statistics.impl.GateStatistics;
 import cz.zcu.kiv.osgi.demo.parking.gate.statistics.IGateStatistics;
-import cz.zcu.kiv.osgi.demo.parking.gate.vehiclesink.IVehicleSink;
-import cz.zcu.kiv.osgi.demo.parking.gate.vehiclesink.impl.VehicleSink;
 import cz.zcu.kiv.osgi.demo.parking.lane.statistics.ILaneStatistics;
 import cz.zcu.kiv.osgi.demo.parking.lane.statistics.impl.LaneStatistics;
 import cz.zcu.kiv.osgi.demo.parking.statsbase.ICountingStatistics;
@@ -28,7 +26,6 @@ public class GateActivator implements BundleActivator
 
     private ServiceRegistration gateSvcReg;
     private ServiceRegistration laneSvcReg;
-    private ServiceRegistration sinkSvcReg;
 
     // dependencies
     private IVehicleFlow parking = null;
@@ -105,14 +102,6 @@ public class GateActivator implements BundleActivator
             throw new ServiceException(lid + ": lane svc registration failed");
         logger.info(lid + ": registered lane svc {}", context.getService(laneSvcReg.getReference()).getClass());
 
-        String[] sinkIds = new String[] {
-                IVehicleSink.class.getName()
-        };
-        sinkSvcReg = context.registerService(sinkIds, sinkImpl, null);
-        if (null == sinkSvcReg)
-            throw new ServiceException(lid + ": vehicle sink svc registration failed");
-        logger.info(lid + ": registered sink svc {}", context.getService(sinkSvcReg.getReference()).getClass());
-
         // start traffic simulator ('coz lane stats still provided by this
         // bundle, not the already added TrafficLane)
         TrafficSimulation lane = new TrafficSimulation(sinkImpl, laneStatsImpl);
@@ -131,8 +120,6 @@ public class GateActivator implements BundleActivator
         logger.info(lid + ": unreg gate svc");
         laneSvcReg.unregister();
         logger.info(lid + ": unreg lane svc");
-        sinkSvcReg.unregister();
-        logger.info(lid + ": unreg sink svc");
         logger.info(lid + ": stopped.");
     }
 

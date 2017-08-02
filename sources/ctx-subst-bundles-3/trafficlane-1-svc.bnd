@@ -5,3 +5,4 @@ Bundle-Version: 1
 Bundle-Activator: cz.zcu.kiv.osgi.demo.parking.lane.LaneActivator
 X-ParkingExample-BundleRev: 1
 Export-Package: cz.zcu.kiv.osgi.demo.parking.lane.statistics
+-dsannotations: 

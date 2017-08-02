@@ -5,7 +5,6 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.zcu.kiv.osgi.demo.parking.gate.vehiclesink.IVehicleSink;
 import cz.zcu.kiv.osgi.demo.parking.lane.statistics.impl.ILaneUpdate;
 
 /**
@@ -22,12 +21,12 @@ public class TrafficSimulation implements Runnable
 	
 	private ILaneUpdate lane;
 	private Logger logger;
-	private static final String lid = "TrafficLane@Gate.r3";
+	private static final String lid = "TrafficSimulation@Gate.r3";
 	
 	// dependencies
-	private IVehicleSink vehicleSink;
+	private VehicleSink vehicleSink;
 
-	public TrafficSimulation(IVehicleSink sink, ILaneUpdate lane)
+	public TrafficSimulation(VehicleSink sink, ILaneUpdate lane)
 	{
 		logger = LoggerFactory.getLogger("parking-demo");
 		logger.info(lid+": <init>");
@@ -42,7 +41,7 @@ public class TrafficSimulation implements Runnable
 	@Override
 	public void run()
 	{
-		logger.info("(!) "+lid+": traffic lane simulation thread starting");
+		logger.info("(!) "+lid+": traffic simulation thread starting");
 		Random r = new Random();
 		vehicleSink.setOpen(true);
 		

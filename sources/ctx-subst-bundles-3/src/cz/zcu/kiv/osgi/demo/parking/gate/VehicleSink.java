@@ -1,10 +1,9 @@
-package cz.zcu.kiv.osgi.demo.parking.gate.vehiclesink.impl;
+package cz.zcu.kiv.osgi.demo.parking.gate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.zcu.kiv.osgi.demo.parking.gate.statistics.impl.IGateUpdate;
-import cz.zcu.kiv.osgi.demo.parking.gate.vehiclesink.IVehicleSink;
 import cz.zcu.kiv.osgi.demo.parking.carpark.flow.IVehicleFlow;
 
 
@@ -14,7 +13,7 @@ import cz.zcu.kiv.osgi.demo.parking.carpark.flow.IVehicleFlow;
  * @author brada
  *
  */
-public class VehicleSink implements IVehicleSink
+public class VehicleSink
 {
 
 	private static VehicleSink instance = null;
@@ -48,7 +47,7 @@ public class VehicleSink implements IVehicleSink
 		this.isOpen = false;
 	}
 	
-	@Override
+
 	public void exchangeVehicles(int numIn, int numOut)
 	{
 		// precondition check
@@ -69,14 +68,12 @@ public class VehicleSink implements IVehicleSink
 	}
 
 
-	@Override
 	public void setOpen(boolean open) {
 		this.isOpen = open;
 		logger.info(lid+": is now {}", isOpen ? "open" : "closed");
 	}
 
 
-	@Override
 	public boolean isOpen() {
 		return this.isOpen;
 	}
