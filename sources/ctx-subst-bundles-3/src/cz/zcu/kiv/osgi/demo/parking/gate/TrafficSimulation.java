@@ -9,11 +9,11 @@ import cz.zcu.kiv.osgi.demo.parking.gate.vehiclesink.IVehicleSink;
 import cz.zcu.kiv.osgi.demo.parking.lane.statistics.impl.ILaneUpdate;
 
 /**
- * Traffic simulator, run by Gate activator in this app revision 3.
+ * Traffic simulator, run by Gate activator.
  * 
  * @author Premek Brada (brada@kiv.zcu.cz)
  */
-public class TrafficLane implements Runnable
+public class TrafficSimulation implements Runnable
 {
 
 	private static final int NUM_CYCLES = 10;
@@ -27,7 +27,7 @@ public class TrafficLane implements Runnable
 	// dependencies
 	private IVehicleSink vehicleSink;
 
-	public TrafficLane(IVehicleSink sink, ILaneUpdate lane)
+	public TrafficSimulation(IVehicleSink sink, ILaneUpdate lane)
 	{
 		logger = LoggerFactory.getLogger("parking-demo");
 		logger.info(lid+": <init>");
@@ -44,6 +44,7 @@ public class TrafficLane implements Runnable
 	{
 		logger.info("(!) "+lid+": traffic lane simulation thread starting");
 		Random r = new Random();
+		vehicleSink.setOpen(true);
 		
 		for (int i = 0; i < NUM_CYCLES; ++i) {
 			logger.info(lid+": loop #{}", i);

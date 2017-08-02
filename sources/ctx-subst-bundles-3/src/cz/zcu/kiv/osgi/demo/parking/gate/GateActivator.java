@@ -115,7 +115,7 @@ public class GateActivator implements BundleActivator
 
         // start traffic simulator ('coz lane stats still provided by this
         // bundle, not the already added TrafficLane)
-        TrafficLane lane = new TrafficLane(sinkImpl, laneStatsImpl);
+        TrafficSimulation lane = new TrafficSimulation(sinkImpl, laneStatsImpl);
         Thread t = new Thread(lane);
         logger.info("(!) " + lid + ": spawning traffic lane thread");
         t.start();

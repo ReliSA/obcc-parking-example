@@ -22,6 +22,7 @@ public class VehicleSink implements IVehicleSink
 	private static final String lid = "VehicleSink.r3";
 	
     private IGateUpdate gate;
+    private boolean isOpen;
     
 	// dependencies
 	private IVehicleFlow parkingPlace = null;
@@ -44,11 +45,16 @@ public class VehicleSink implements IVehicleSink
 		logger.info(lid+": <init>");
 		parkingPlace = flow;
 		this.gate = gate;
+		this.isOpen = false;
 	}
 	
 	@Override
 	public void exchangeVehicles(int numIn, int numOut)
 	{
+		// precondition check
+		if (! isOpen) {
+			throw new IllegalStateException(lid+": Gate not open, cannot let vehicles in/out");
+		}
 		logger.info(lid+": about to exchange {}/{} in/out vehicles at gate", numIn, numOut);
 		// simulate vehicle arrival
 		for (int i=0; i<numIn; ++i) {
@@ -60,6 +66,19 @@ public class VehicleSink implements IVehicleSink
 			parkingPlace.leave();
 		}
 		gate.vehiclesDeparted(numOut);
+	}
+
+
+	@Override
+	public void setOpen(boolean open) {
+		this.isOpen = open;
+		logger.info(lid+": is now {}", isOpen ? "open" : "closed");
+	}
+
+
+	@Override
+	public boolean isOpen() {
+		return this.isOpen;
 	}
 
 }

@@ -1,11 +1,13 @@
 Bundle-SymbolicName: obcc-parking-example.gate-svc
-Private-Package: cz.zcu.kiv.osgi.demo.parking.gate,\
+Private-Package: \
+	cz.zcu.kiv.osgi.demo.parking.gate,\
 	cz.zcu.kiv.osgi.demo.parking.gate.statistics.impl,\
 	cz.zcu.kiv.osgi.demo.parking.gate.vehiclesink.impl,\
-	cz.zcu.kiv.osgi.demo.parking.lane.statistics.impl
+	cz.zcu.kiv.osgi.demo.parking.lane.statistics.impl,\
+	cz.zcu.kiv.osgi.demo.parking.gate.vehiclesink
 Bundle-Version: 3
 Bundle-Activator: cz.zcu.kiv.osgi.demo.parking.gate.GateActivator
-Export-Package: cz.zcu.kiv.osgi.demo.parking.gate.statistics,\
-	cz.zcu.kiv.osgi.demo.parking.gate.vehiclesink,\
+Export-Package: \
+	cz.zcu.kiv.osgi.demo.parking.gate.statistics,\
 	cz.zcu.kiv.osgi.demo.parking.lane.statistics
 X-ParkingExample-BundleRev: 3	
