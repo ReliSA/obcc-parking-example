@@ -27,7 +27,7 @@ public class VehicleSink
 	private IVehicleFlow parkingPlace = null;
 	
 	/** 
-	 * Create service instance.
+	 * Create singleton instance.
 	 */
 	public static VehicleSink getInstance(IVehicleFlow flow, IGateUpdate gate) 
 	{

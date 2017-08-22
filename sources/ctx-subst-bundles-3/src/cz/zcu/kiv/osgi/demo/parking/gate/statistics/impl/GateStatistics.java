@@ -59,16 +59,18 @@ public class GateStatistics implements IGateStatistics, IGateUpdate
     @Override
     public void vehiclesArrived(int cntArrived)
     {
-        logger.info(getIdentification()+": {} vehicles about to enter", cntArrived);
         entered += cntArrived;
+        logger.info(getIdentification()+": increased new vehicles entered count by {} to {}", 
+        		cntArrived, entered);
     }
 
     @Override
     public void vehiclesDeparted(int cntDeparted)
     {
-        logger.info(getIdentification()+": {} vehicles about to leave", cntDeparted);
         leaved += cntDeparted;	// FIXME can lead to inconsistent state when
                                // entered < leaved
+        logger.info(getIdentification()+": increased new vehicles left count by {} to {}", 
+        		cntDeparted, leaved);
     }
 
     @Override
