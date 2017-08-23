@@ -27,7 +27,7 @@ public class CarParkActivator implements BundleActivator
 	{
 		// Since the CarPark is a leaf component (not depending on any functional one), we initialize
 		// the logging backend for the whole application here. 
-		String lf = "%d{HH:mm:ss,SSS} %-5p - %m%n";
+		String lf = "[%t] %d{HH:mm:ss,SSS} %-5p - %m%n";
 		// Log4J 1.2 provides a simple programmatic configuration (unlike log4j2), and the SLF4J logger picks it up.
 		org.apache.log4j.BasicConfigurator.configure(new ConsoleAppender(new PatternLayout(lf)));
 		this.logger = LoggerFactory.getLogger("parking-demo");
