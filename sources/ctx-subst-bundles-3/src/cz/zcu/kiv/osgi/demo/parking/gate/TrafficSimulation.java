@@ -41,7 +41,7 @@ public class TrafficSimulation implements Runnable
 	@Override
 	public void run()
 	{
-		logger.info("(!) "+lid+": traffic simulation thread starting");
+		logger.info("(!) "+lid+": traffic simulation thread starting ({} cycles)",NUM_CYCLES);
 		Random r = new Random();
 		vehicleSink.setOpen(true);
 		

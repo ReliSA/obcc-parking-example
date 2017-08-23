@@ -117,10 +117,12 @@ public class GateActivator implements BundleActivator
         logger.info(lid + ": registered gate control svc {}", context.getService(gateCtlReg.getReference()).getClass());
 
         // bundle start sequence
+        gateStatsImpl.clear();
+        laneStatsImpl.clear();
         
         // start traffic simulator
         TrafficSimulation traffic = new TrafficSimulation(sink, laneStatsImpl);
-        Thread t = new Thread(traffic);
+        Thread t = new Thread(traffic, "traffic");
         logger.info("(!) " + lid + ": spawning traffic lane thread");
         t.start();
         logger.info("(!) " + lid + ": traffic lane thread spawned");
