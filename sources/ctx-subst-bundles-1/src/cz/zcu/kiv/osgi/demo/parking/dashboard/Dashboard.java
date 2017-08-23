@@ -24,9 +24,7 @@ public class Dashboard implements Runnable
 		logger.info(lid+": <init>");
 		
 		gateStats = gate;
-		gateStats.clear();
 		laneStats = lane;
-		laneStats.clear();
 	}
 
 	@Override
