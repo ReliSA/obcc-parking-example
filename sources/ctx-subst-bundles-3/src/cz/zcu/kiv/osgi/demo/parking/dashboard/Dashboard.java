@@ -46,7 +46,7 @@ public class Dashboard implements Runnable
 		gateNum = gateStats.getEventCount();
 		laneNum = laneStats.getCountVehiclesPassed();
 		logger.info("*** "+lid+": STARTING RUN ({} cycles)", NUM_CYCLES);
-		logger.info(lid+": initial stats -- lane vehicles passed {}, gate events {}" , laneNum, gateNum );
+		logger.info("*** "+lid+": initial stats -- lane vehicles passed {}, gate events {}" , laneNum, gateNum );
 		for (int i=0; i<NUM_CYCLES; ++i) {
 			logger.info("*** "+lid+": loop {}",i);
 			gateNum = gateStats.getEventCount();

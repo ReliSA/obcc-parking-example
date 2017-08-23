@@ -44,7 +44,8 @@ public class DashboardActivator implements BundleActivator
 		else {
 			gateStats = (IGateStatistics) context.getService(sr);
 			if (gateStats == null) {
-				logger.error(lid+": no gate stats service available");
+				logger.error(lid+": gate stats service unavailable, exiting");
+				throw new BundleException(lid + ": gate stats service unavailable, exiting");
 			}
 			else {
 				logger.info(lid+": got gate stats service");
@@ -73,7 +74,7 @@ public class DashboardActivator implements BundleActivator
 		// requirements ok, go ahead
 		
 		dashboard = new Dashboard(gateStats, laneStats);
-		t = new Thread(dashboard);
+		t = new Thread(dashboard, "dashboard");
 		logger.info("(!) "+lid+": spawning dashboard thread");
 		t.start();
 		logger.info("(!) "+lid+": dashboard thread spawned");
