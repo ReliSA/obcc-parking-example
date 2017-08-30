@@ -1,5 +1,6 @@
-package cz.zcu.kiv.osgi.demo.parking.lane.statistics;
+package cz.zcu.kiv.osgi.demo.parking.lane.statistics.impl;
 
+import cz.zcu.kiv.osgi.demo.parking.lane.statistics.ILaneStatistics;
 import cz.zcu.kiv.osgi.demo.parking.statsbase.CountingStatisticsAbstractBaseImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

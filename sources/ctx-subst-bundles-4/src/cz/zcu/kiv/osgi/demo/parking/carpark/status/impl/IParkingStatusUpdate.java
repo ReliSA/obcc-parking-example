@@ -1,4 +1,4 @@
-package cz.zcu.kiv.osgi.demo.parking.carpark.status;
+package cz.zcu.kiv.osgi.demo.parking.carpark.status.impl;
 
 /**
  * Enable manipulating carpark status.
