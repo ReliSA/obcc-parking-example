@@ -56,16 +56,16 @@ public class VehicleSink
 			throw new IllegalStateException(lid+": Gate not open, cannot let vehicles in/out");
 		}
 		logger.info(lid+": about to exchange {}/{} in/out vehicles at gate", numIn, numOut);
-		// simulate vehicle arrival
-		for (int i=0; i<numIn; ++i) {
-			parkingPlace.arrive();
-		}
-		gate.vehiclesArrived(numIn);
 		// simulate vehicle departure
 		for (int i=0; i<numOut; ++i) {
 			parkingPlace.leave();
 		}
 		gate.vehiclesDeparted(numOut);
+		// simulate vehicle arrival
+		for (int i=0; i<numIn; ++i) {
+			parkingPlace.arrive();
+		}
+		gate.vehiclesArrived(numIn);
 	}
 
 
