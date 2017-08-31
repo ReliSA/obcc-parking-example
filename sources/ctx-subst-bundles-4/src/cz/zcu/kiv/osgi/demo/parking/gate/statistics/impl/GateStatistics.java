@@ -1,11 +1,12 @@
-package cz.zcu.kiv.osgi.demo.parking.gate.statistics;
+package cz.zcu.kiv.osgi.demo.parking.gate.statistics.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.zcu.kiv.osgi.demo.parking.statsbase.CountingStatisticsAbstractBaseImpl;
+import cz.zcu.kiv.osgi.demo.parking.carpark.flow.IVehicleFlow;
 import cz.zcu.kiv.osgi.demo.parking.carpark.status.IParkingStatus;
-import cz.zcu.kiv.osgi.demo.parking.carpark.status.ParkingStatus;
+import cz.zcu.kiv.osgi.demo.parking.gate.statistics.IGateStatistics;
 
 /**
  * Extended version of GateStatistics, depends on both VehicleFlow and ParkingStatus.
@@ -13,10 +14,13 @@ import cz.zcu.kiv.osgi.demo.parking.carpark.status.ParkingStatus;
  * @author brada
  *
  */
-public class GateStatistics extends CountingStatisticsAbstractBaseImpl implements IGateStatistics
+public class GateStatistics extends CountingStatisticsAbstractBaseImpl 
+	implements IGateStatistics, IGateStatisticsUpdate, IParkingStatus
 {
-	private static GateStatistics instance;	
+	private static GateStatistics instance;
+	
 	private Logger logger = null;
+	private static final String lid = "GateStats.r4";
 	
 	// dependencies
 	private IParkingStatus parkingStatus = null;
@@ -25,50 +29,54 @@ public class GateStatistics extends CountingStatisticsAbstractBaseImpl implement
 	private int leaved = 0;
 	
 	/** 
-	 * Fake service provisioning.
+	 * Create service instance.
 	 */
-	public static IGateStatistics getInstance() 
+	public static GateStatistics getInstance(IVehicleFlow parking, IParkingStatus status) 
 	{
 		if (instance == null) {
-			instance = new GateStatistics();
+			instance = new GateStatistics(parking, status);
 		}
 		return instance;
 	}
 	
 	
-	protected GateStatistics()
+	protected GateStatistics(IVehicleFlow parking, IParkingStatus status)
 	{
 		logger = LoggerFactory.getLogger("parking-demo");
-		logger.info("GateStats.r4 <init>");
-		parkingStatus = ParkingStatus.getInstance();
+		logger.info(lid + ": <init>");
+		parkingStatus = status;
 		clear();
 	}
 	
+	@Override
 	public void vehiclesArrived(int cntArrived)
 	{
-		logger.info("Gate: {} vehicles about to enter",cntArrived);
 		entered += cntArrived;
 		addToEventCount(cntArrived);
+	    logger.info(lid + ": increased new vehicles entered count by {} to {}", 
+        		cntArrived, entered);
 	}
 	
+	@Override
 	public void vehiclesDeparted(int cntDeparted)
 	{
-		logger.info("Gate: {} vehicles about to leave",cntDeparted);
 		leaved += cntDeparted;	// FIXME can lead to inconsistent state when  entered < leaved 
 		addToEventCount(cntDeparted);
+        logger.info(lid + ": increased new vehicles left count by {} to {}", 
+        		cntDeparted, leaved);
 	}
 	
 	@Override
 	public int getNumberOfVehiclesEntering()
 	{
-		logger.info(getIdentification()+": get entering {}", entered);
+		logger.info(getIdentification() + ": {} total vehicles entered, full? {}", entered, parkingStatus.isFull());
 		return entered;
 	}
 
 	@Override
 	public int getNumberOfVehiclesLeaving()
 	{
-		logger.info(getIdentification()+": get leaving {}", leaved);
+		logger.info(getIdentification() + ": {} total vehicles left, full? {}", leaved, parkingStatus.isFull());
 		return leaved;
 	}
 
@@ -78,6 +86,16 @@ public class GateStatistics extends CountingStatisticsAbstractBaseImpl implement
 		return "GateStatistics,r4";
 	}
 	
+	@Override
+	public void clear()
+	{
+		super.clear();
+		leaved = 0;
+		entered = 0;
+		parkingStatus.reset();
+		logger.info(getIdentification()+": counters cleared");
+	}
+
 
 	@Override
 	public boolean isFull()
@@ -104,15 +122,9 @@ public class GateStatistics extends CountingStatisticsAbstractBaseImpl implement
 
 
 	@Override
-	public void clear()
-	{
-		super.clear();
-		leaved = 0;
-		entered = 0;
-		if (parkingStatus instanceof ParkingStatus) {
-			((ParkingStatus)parkingStatus).reset();
-		}
-		logger.info(getIdentification()+": counters cleared");
+	public void reset() {
+		logger.info(getIdentification()+": reset");
+		parkingStatus.reset();
 	}
 
 }
