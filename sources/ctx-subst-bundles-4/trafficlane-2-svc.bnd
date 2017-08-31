@@ -4,7 +4,7 @@ Private-Package: \
 	cz.zcu.kiv.osgi.demo.parking.lane.statistics.impl,\
 	cz.zcu.kiv.osgi.demo.parking.lane.status.impl
 Bundle-Version: 2
-Bundle-Activator: cz.zcu.kiv.osgi.demo.parking.lane.Activator
+Bundle-Activator: cz.zcu.kiv.osgi.demo.parking.lane.LaneActivator
 X-ParkingExample-BundleRev: 2
 Export-Package: \
 	cz.zcu.kiv.osgi.demo.parking.lane.statistics,\

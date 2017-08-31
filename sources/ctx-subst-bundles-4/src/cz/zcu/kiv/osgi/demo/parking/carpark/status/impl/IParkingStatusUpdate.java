@@ -7,5 +7,4 @@ public interface IParkingStatusUpdate
 {
 	public void decreaseFreePlaces(int amount);
 	public void increaseFreePlaces(int amount);
-	public void reset();
 }

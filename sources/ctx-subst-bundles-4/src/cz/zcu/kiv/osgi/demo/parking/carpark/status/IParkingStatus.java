@@ -9,4 +9,5 @@ public interface IParkingStatus
 	// added in this version
 	public int getCapacity();
 	public int getNumFreePlaces();
+	public void reset();
 }
