@@ -31,9 +31,9 @@ public class Dashboard implements Runnable
 		logger.info(lid+": <init>");
 		
 		gateStats = gate;
-		gateStats.clear();
+//		gateStats.clear();
 		laneStats = lane;
-		laneStats.clear();    // from Gate, not from TrafficLane bundle
+//		laneStats.clear();    // from Gate, not from TrafficLane bundle
 	}
 	
 	@Override
