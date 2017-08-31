@@ -41,7 +41,7 @@ package cz.zcu.kiv.osgi.demo.parking.gate.statistics.impl;
  * 
  * @author Premek Brada (brada@kiv.zcu.cz)
  */
-public interface IGateUpdate
+public interface IGateStatisticsUpdate
 {
     public void vehiclesDeparted(int cntDeparted);
     public void vehiclesArrived(int cntArrived);

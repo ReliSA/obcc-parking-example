@@ -3,7 +3,7 @@ package cz.zcu.kiv.osgi.demo.parking.gate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.zcu.kiv.osgi.demo.parking.gate.statistics.impl.IGateUpdate;
+import cz.zcu.kiv.osgi.demo.parking.gate.statistics.impl.IGateStatisticsUpdate;
 import cz.zcu.kiv.osgi.demo.parking.carpark.flow.IVehicleFlow;
 
 
@@ -20,7 +20,7 @@ public class VehicleSink
 	private Logger logger = null;
 	private static final String lid = "VehicleSink.r3";
 	
-    private IGateUpdate gate;
+    private IGateStatisticsUpdate gate;
     private boolean isOpen;
     
 	// dependencies
@@ -29,7 +29,7 @@ public class VehicleSink
 	/** 
 	 * Create singleton instance.
 	 */
-	public static VehicleSink getInstance(IVehicleFlow flow, IGateUpdate gate) 
+	public static VehicleSink getInstance(IVehicleFlow flow, IGateStatisticsUpdate gate) 
 	{
 		if (instance == null) {
 			instance = new VehicleSink(flow, gate);
@@ -38,7 +38,7 @@ public class VehicleSink
 	}
 	
 	
-	protected VehicleSink(IVehicleFlow flow, IGateUpdate gate)
+	protected VehicleSink(IVehicleFlow flow, IGateStatisticsUpdate gate)
 	{
 		logger = LoggerFactory.getLogger("parking-demo");
 		logger.info(lid+": <init>");

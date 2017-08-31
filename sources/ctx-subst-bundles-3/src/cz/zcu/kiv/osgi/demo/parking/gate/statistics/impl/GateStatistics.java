@@ -16,7 +16,7 @@ import cz.zcu.kiv.osgi.demo.parking.gate.statistics.IGateStatistics;
  * @author brada
  * 
  */
-public class GateStatistics implements IGateStatistics, IGateUpdate
+public class GateStatistics implements IGateStatistics, IGateStatisticsUpdate
 {
     private static GateStatistics instance;
 
@@ -24,13 +24,10 @@ public class GateStatistics implements IGateStatistics, IGateUpdate
     private static final String lid = "GateStats.r3";
 
     // dependencies
-//    private IVehicleFlow parkingPlace = null;
     private IParkingStatus parkingStatus = null;
 
-//    private LaneStatistics laneStats = null;
     private int entered = 0;
     private int leaved = 0;
-//    private Random r = null;
 
     /**
      * Create service instance.
@@ -49,10 +46,7 @@ public class GateStatistics implements IGateStatistics, IGateUpdate
         logger = LoggerFactory.getLogger("parking-demo");
         logger.info(getIdentification() + ": <init>");
 
-//        parkingPlace = parking;
         parkingStatus = status;
-//        laneStats = (LaneStatistics) LaneStatistics.getInstance();
-//        r = new Random();
         clear();
     }
 
