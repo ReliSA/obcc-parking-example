@@ -83,7 +83,7 @@ public class GateStatistics extends CountingStatisticsAbstractBaseImpl
 	@Override
 	public String getIdentification()
 	{
-		return "GateStatistics,r4";
+		return lid;
 	}
 	
 	@Override
