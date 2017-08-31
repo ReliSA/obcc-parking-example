@@ -35,7 +35,6 @@ public class GateActivator implements BundleActivator
 
     // published services
     private ServiceRegistration gateSvcReg;
-    private ServiceRegistration laneSvcReg;
     private ServiceRegistration gateCtlReg;
 
     // dependencies
@@ -133,7 +132,7 @@ public class GateActivator implements BundleActivator
         gateStatsImpl.clear();
         
         // start traffic simulator
-        TrafficSimulation traffic = new TrafficSimulation(sink, lane);
+        TrafficSimulation traffic = new TrafficSimulation(sink, lane, status);
         Thread t = new Thread(traffic, "traffic");
         logger.info("(!) " + lid + ": spawning traffic lane thread");
         t.start();
