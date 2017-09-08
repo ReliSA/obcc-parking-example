@@ -19,7 +19,7 @@ public class VehicleSink
 
 	private static VehicleSink instance = null;
 	private Logger logger = null;
-	private static final String lid = "VehicleSink.r3";
+	private static final String lid = "VehicleSink.r4";
 	
     private IGateStatisticsUpdate gate;
     private boolean isOpen;

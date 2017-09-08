@@ -18,15 +18,13 @@ public class TrafficSimulation implements Runnable
 
 	private static final int NUM_CYCLES = 10;
 	private static final long PAUSE_TIME = 300;
-	private static final int MAX_VEHICLES_IN_BATCH = 10;
 	
 	private ILaneStatus lane;
-	private IParkingStatus status;
+	private IParkingStatus parking;
 	
 	private Logger logger;
 	private static final String lid = "TrafficSimulation@Gate.r4";
 	
-	// dependencies
 	private VehicleSink vehicleSink;
 
 	public TrafficSimulation(VehicleSink sink, ILaneStatus lane, IParkingStatus status)
@@ -35,12 +33,11 @@ public class TrafficSimulation implements Runnable
 		logger.info(lid+": <init>");
 		this.vehicleSink = sink;
 		this.lane = lane;
-		this.status = status;
+		this.parking = status;
 	}
 	
 	/**
-	 * Simulates traffic by "injecting" vehicles into the VehicleSink. Run by Gate 
-	 * activator in r3 since Gate is the stats provider.
+	 * Simulates traffic by "injecting" vehicles into the VehicleSink.
 	 */
 	@Override
 	public void run()
@@ -53,9 +50,9 @@ public class TrafficSimulation implements Runnable
 		for (int i = 0; i < NUM_CYCLES; ++i) {
 			logger.info(lid+": loop #{}", i);
 			vehiclesIn  = lane.getNumVehiclesLeaving();
-			vehiclesOut = r.nextInt(status.getCapacity() - status.getNumFreePlaces() + 1);
+			vehiclesOut = r.nextInt(parking.getCapacity() - parking.getNumFreePlaces() + 1);
 			logger.info(lid+": simulate {} entering and {} leaving vehicles, {} free for parking",
-					vehiclesIn, vehiclesOut, status.getNumFreePlaces());
+					vehiclesIn, vehiclesOut, parking.getNumFreePlaces());
 			vehicleSink.exchangeVehicles(vehiclesIn, vehiclesOut);
 			try {
 				Thread.sleep(PAUSE_TIME);
