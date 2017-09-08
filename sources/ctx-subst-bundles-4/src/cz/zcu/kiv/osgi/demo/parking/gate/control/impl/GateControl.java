@@ -39,13 +39,21 @@ public class GateControl implements IGateControl {
 	
 	
 	@Override
-	public void openGate() {
+	public void openGate() throws IllegalStateException {
+		if (sink.isOpen()) {
+			logger.error(lid+": attempt to open an open gate");
+			throw new IllegalStateException(lid+": attempt to open an open gate");
+		}
 		sink.setOpen(true);
 		logger.info(lid + ": gate set to open");
 	}
 
 	@Override
-	public void closeGate() {
+	public void closeGate() throws IllegalStateException {
+		if (!sink.isOpen()) {
+			logger.error(lid+": attempt to close a closed gate");
+			throw new IllegalStateException(lid+": attempt to close a closed gate");
+		}
 		sink.setOpen(false);
 		logger.info(lid + ": gate set to closed");
 	}
