@@ -9,20 +9,24 @@ import cz.zcu.kiv.osgi.demo.parking.statsbase.ICountingStatistics;
 public class Dashboard implements Runnable
 {
 	private static final int NUM_CYCLES = 10;
+	private static final long WAIT_TIME = 100;
 	private static final long PAUSE_TIME = 200;
 
 	Logger logger = null;
+	private DashboardActivator activator;
+	
 	private static final String lid = "Dashboard.r1";
 	
 	// dependencies, intentionally generalized type on this endpoint
 	ICountingStatistics gateStats = null;
 	ILaneStatistics laneStats = null;
 	
-	public Dashboard(ICountingStatistics gate, ILaneStatistics lane) 
+	public Dashboard(DashboardActivator activator, ICountingStatistics gate, ILaneStatistics lane) 
 	{
 		this.logger = LoggerFactory.getLogger("parking-demo");
 		logger.info(lid+": <init>");
 		
+		this.activator = activator;
 		gateStats = gate;
 		laneStats = lane;
 	}
@@ -32,6 +36,10 @@ public class Dashboard implements Runnable
 	{
 		int gateNum;
 		int laneNum;
+		
+		logger.info("(!) "+lid+": thread starting");
+		
+		ensureServicesAvailable();
 		
 		gateNum = gateStats.getEventCount();
 		laneNum = laneStats.getCountVehiclesPassed();
@@ -46,13 +54,29 @@ public class Dashboard implements Runnable
 				Thread.sleep(PAUSE_TIME);
 			}
 			catch (InterruptedException e) {
-				logger.warn(lid+": thread interrupted");
+				logger.warn("(!)"+lid+": thread interrupted");
 				e.printStackTrace();
 			}
 			Thread.yield();
 		}
 		logger.info("*** "+lid+": FINISHED RUN");
 			
+	}
+
+	
+	private void ensureServicesAvailable() 
+	{
+		while ((gateStats == null) || (laneStats == null)) {
+			logger.warn(lid+": some required service not set, waiting and trying again...");
+			try {
+				Thread.sleep(WAIT_TIME);
+			} catch (InterruptedException e) {
+				logger.warn("(!)"+lid+": thread interrupted");
+				e.printStackTrace();
+			}
+			gateStats = (gateStats == null) ? activator.getGateStatsService() : gateStats;
+			laneStats = (laneStats == null) ? activator.getLaneStatsService() : laneStats;
+		}
 	}
 
 }
