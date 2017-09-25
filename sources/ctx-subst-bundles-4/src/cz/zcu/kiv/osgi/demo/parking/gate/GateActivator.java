@@ -30,109 +30,51 @@ import cz.zcu.kiv.osgi.demo.parking.statsbase.ICountingStatistics;
 public class GateActivator implements BundleActivator
 {
 
+	private BundleContext context;
 	private Logger logger;
 	private static final String lid = "Gate.r4 Activator";
+	
+	private VehicleSink sink;
 
     // published services
     private ServiceRegistration gateSvcReg;
+    private GateStatistics gateStatsImpl;
     private ServiceRegistration gateCtlReg;
-
-    // dependencies
-    private IVehicleFlow parking = null;
-    private IParkingStatus status = null;
-    private ILaneStatus lane = null;
-
+    private GateControl gateCtlImpl;
+    
 
 	public GateActivator()
 	{
 		this.logger = LoggerFactory.getLogger("parking-demo");
+		this.gateStatsImpl = null;
+		this.gateCtlImpl = null;
+		this.sink = null;
 	}
 
+	
 	@Override
 	public void start(BundleContext context) throws Exception
 	{
 		logger.info(lid + ": starting");
-		
+		this.context = context;
 
         // required services
 
-        ServiceReference sr;
-        sr = context.getServiceReference(IVehicleFlow.class.getName());
-        if (sr == null) {
-            logger.error(lid + ": no parking service registered");
-        }
-        else {
-            parking = (IVehicleFlow) context.getService(sr);
-            if (parking == null) {
-                logger.error(lid + ": no parking service available");
-            }
-            else {
-                logger.info(lid + ": got parking service");
-            }
-        }
-
-        sr = context.getServiceReference(IParkingStatus.class.getName());
-        if (sr == null) {
-            logger.error(lid + ": no parking status registered");
-        }
-        else {
-            status = (IParkingStatus) context.getService(sr);
-            if (status == null) {
-                logger.error(lid + ": no parking status service available");
-            }
-            else {
-                logger.info(lid + ": got parking status service");
-            }
-        }
-        
-        sr = context.getServiceReference(ILaneStatus.class.getName());
-        if (sr == null) {
-            logger.error(lid + ": no lane status service registered");
-        }
-        else {
-            lane = (ILaneStatus) context.getService(sr);
-            if (lane == null) {
-                logger.error(lid + ": no lane status service available");
-            }
-            else {
-                logger.info(lid + ": got lane status service");
-            }
-        }
-
+		IVehicleFlow parking = getVehicleFlowService();
+		IParkingStatus status = getParkingStatusService();
+		ILaneStatus lane = getLaneStatusService();
 
         if ((parking == null) || (status == null) || (lane == null)) {
-            logger.error(lid + ": parking and/or status services unavailable, exiting");
-            throw new BundleException(lid + ": parking and/or status services unavailable, exiting");
+            logger.warn(lid + ": parking and/or status services unavailable on bundle startup...");
         }
-
-        // provided services
-
-        GateStatistics gateStatsImpl = GateStatistics.getInstance(parking, status);
-        VehicleSink sink = VehicleSink.getInstance(parking, gateStatsImpl);
-        GateControl gateCtlImpl = GateControl.getInstance(sink);
-        
-        String[] gateIds = new String[] {
-                ICountingStatistics.class.getName(),
-                IGateStatistics.class.getName()
-        };
-        gateSvcReg = context.registerService(gateIds, gateStatsImpl, null);
-        if (null == gateSvcReg)
-            throw new ServiceException(lid + ": gate svc registration failed");
-        logger.info(lid + ": registered gate svc {}", context.getService(gateSvcReg.getReference()).getClass());
-
-        String[] ctlIds = new String[] {
-                IGateControl.class.getName()
-        };
-        gateCtlReg = context.registerService(ctlIds, gateCtlImpl, null);
-        if (null == gateCtlReg)
-            throw new ServiceException(lid + ": gate control svc registration failed");
-        logger.info(lid + ": registered gate control svc {}", context.getService(gateCtlReg.getReference()).getClass());
-
-        // bundle start sequence
-        gateStatsImpl.clear();
+        else {
+        	// provided services can only be started once we have the dependencies
+    		registerGateStatsSvc(parking, status);
+    		registerGateCtlSvc(parking);
+        }
         
         // start traffic simulator
-        TrafficSimulation traffic = new TrafficSimulation(sink, lane, status);
+        TrafficSimulation traffic = new TrafficSimulation(this, parking, lane, status);
         Thread t = new Thread(traffic, "traffic");
         logger.info("(!) " + lid + ": spawning traffic lane thread");
         t.start();
@@ -149,6 +91,121 @@ public class GateActivator implements BundleActivator
         gateCtlReg.unregister();
         logger.info(lid + ": unreg gate ctl svc");
         logger.info(lid + ": stopped.");
+	}
+
+	
+	// needed by TrafficSimulation
+	VehicleSink getSink() 
+	{
+		return this.sink;
+	}
+
+	
+	void registerGateCtlSvc(IVehicleFlow parking) throws ServiceException 
+	{
+		if (parking == null) {
+			logger.error(lid + ": some dependencies missing, cannot publish Gate Ctl service");
+			throw new IllegalStateException(lid + ": some dependencies missing, cannot publish Gate Ctl service");
+		}
+
+		if (gateCtlImpl == null) {
+			sink = (sink == null) ? VehicleSink.getInstance(parking, gateStatsImpl) : sink;
+			gateCtlImpl = GateControl.getInstance(sink);
+
+			String[] ctlIds = new String[] {
+					IGateControl.class.getName()
+			};
+			gateCtlReg = context.registerService(ctlIds, gateCtlImpl, null);
+			if (null == gateCtlReg)
+				throw new ServiceException(lid + ": gate control svc registration failed");
+			logger.info(lid + ": registered gate control svc {}", context.getService(gateCtlReg.getReference()).getClass());
+		}
+	}
+
+
+	void registerGateStatsSvc(IVehicleFlow parking, IParkingStatus status) throws ServiceException 
+	{
+		if ((parking == null) || (status == null)) {
+			logger.error(lid + ": some dependencies missing, cannot publish Gate Stats service");
+			throw new IllegalStateException(lid + ": some dependencies missing, cannot publish Gate Stats service");
+		}
+
+		if (gateStatsImpl == null) {
+			gateStatsImpl = GateStatistics.getInstance(parking, status);
+        	gateStatsImpl.clear();
+
+	        String[] gateIds = new String[] {
+	                ICountingStatistics.class.getName(),
+	                IGateStatistics.class.getName()
+	        };
+	        gateSvcReg = context.registerService(gateIds, gateStatsImpl, null);
+	        if (null == gateSvcReg)
+	            throw new ServiceException(lid + ": gate stats svc registration failed");
+	        logger.info(lid + ": registered gate stats svc {}", context.getService(gateSvcReg.getReference()).getClass());
+		}
+	}
+	
+
+	ILaneStatus getLaneStatusService() 
+	{
+		ILaneStatus res = null;
+		ServiceReference sr;
+		sr = context.getServiceReference(ILaneStatus.class.getName());
+        if (sr == null) {
+        	logger.warn(lid + ": no lane status service registered");
+        }
+        else {
+            res = (ILaneStatus) context.getService(sr);
+            if (res == null) {
+            	logger.warn(lid + ": no lane status service available");
+            }
+            else {
+            	logger.info(lid + ": got lane status service");
+            }
+        }
+        return res;
+	}
+	
+
+	IParkingStatus getParkingStatusService() 
+	{
+		IParkingStatus res = null;
+		ServiceReference sr;
+		sr = context.getServiceReference(IParkingStatus.class.getName());
+        if (sr == null) {
+            logger.warn(lid + ": no parking status registered");
+        }
+        else {
+        	res = (IParkingStatus) context.getService(sr);
+            if (res == null) {
+            	logger.warn(lid + ": no parking status service available");
+            }
+            else {
+            	logger.info(lid + ": got parking status service");
+            }
+        }
+        return res;
+	}
+
+	
+	IVehicleFlow getVehicleFlowService() 
+	{
+		IVehicleFlow res = null;
+		ServiceReference sr;
+        sr = context.getServiceReference(IVehicleFlow.class.getName());
+        if (sr == null) {
+        	logger.warn(lid + ": no parking service registered");
+        }
+        else {
+            res = (IVehicleFlow) context.getService(sr);
+            if (res == null) {
+            	logger.warn(lid + ": no parking service available");
+            }
+            else {
+            	logger.info(lid + ": got parking service");
+            }
+        }
+        return res;
 	}
 
 }
