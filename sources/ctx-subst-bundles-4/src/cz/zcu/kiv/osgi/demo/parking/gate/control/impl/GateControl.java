@@ -40,6 +40,7 @@ public class GateControl implements IGateControl {
 	
 	@Override
 	public void openGate() throws IllegalStateException {
+		// check precondition (conditional runtime exception)
 		if (sink.isOpen()) {
 			logger.error(lid+": attempt to open an open gate");
 			throw new IllegalStateException(lid+": attempt to open an open gate");
@@ -50,6 +51,7 @@ public class GateControl implements IGateControl {
 
 	@Override
 	public void closeGate() throws IllegalStateException {
+		// check precondition
 		if (!sink.isOpen()) {
 			logger.error(lid+": attempt to close a closed gate");
 			throw new IllegalStateException(lid+": attempt to close a closed gate");

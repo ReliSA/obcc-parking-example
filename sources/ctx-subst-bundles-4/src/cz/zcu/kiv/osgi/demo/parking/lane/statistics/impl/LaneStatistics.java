@@ -15,7 +15,7 @@ public class LaneStatistics extends CountingStatisticsAbstractBaseImpl implement
 	private long timerStart = 0L;
 	
 	/**
-	 * Fake service provisioning.
+	 * Get singleton instance.
 	 */
 	public static ILaneStatistics getInstance()
 	{

@@ -15,7 +15,7 @@ import cz.zcu.kiv.osgi.demo.parking.statsbase.ICountingStatistics;
 
 public class LaneActivator implements BundleActivator
 {
-	
+
 	private Logger logger;
 	private static final String lid = "LaneActivator.r4";
 	
@@ -32,7 +32,7 @@ public class LaneActivator implements BundleActivator
 	{
 		logger.info(lid + ": starting");
 		
-		// get requirements
+		// register provided services
 		
 		ILaneStatistics laneStatisImpl = LaneStatistics.getInstance();
         String[] laneIds = new String[] {
