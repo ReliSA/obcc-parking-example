@@ -1,8 +1,9 @@
-package cz.zcu.kiv.osgi.demo.parking.carpark.status;
+package cz.zcu.kiv.osgi.demo.parking.carpark.status.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.zcu.kiv.osgi.demo.parking.carpark.status.IParkingStatus;
 
 
 /**
@@ -14,11 +15,12 @@ public class ParkingStatus implements IParkingStatus, IParkingStatusUpdate
 	
 	private static ParkingStatus instance = null;
 	private Logger logger = null;
+	private static final String lid = "ParkingStatus.r5";
 	
 	private int numPlacesFree;
 	
 	/** 
-	 * Fake service provisioning.
+	 * Provide singleton instance.
 	 */
 	public static IParkingStatus getInstance() 
 	{
@@ -32,7 +34,7 @@ public class ParkingStatus implements IParkingStatus, IParkingStatusUpdate
 	protected ParkingStatus()
 	{
 		this.logger = LoggerFactory.getLogger("parking-demo");
-		logger.info("ParkingStatus.r4 <init>");
+		logger.info(lid+": <init>");
 		this.reset();
 	}	
 
@@ -40,7 +42,7 @@ public class ParkingStatus implements IParkingStatus, IParkingStatusUpdate
 	public boolean isFull()
 	{
 		boolean isFull = (getNumFreePlaces() <= 0);
-		logger.info("ParkingStatus: isFull {} (free {} places)", isFull, getNumFreePlaces());
+		logger.info(lid+": isFull {} (free {} places)", isFull, getNumFreePlaces());
 		return isFull;
 	}
 	
@@ -63,7 +65,7 @@ public class ParkingStatus implements IParkingStatus, IParkingStatusUpdate
 			numPlacesFree = 0;
 		else
 			numPlacesFree -= amount;
-		logger.info("ParkingStatus: decreased free places by {} to {}", amount, numPlacesFree);
+		logger.info(lid+": decreased free places by {} to {}", amount, numPlacesFree);
 	}
 	
 	@Override
@@ -72,14 +74,14 @@ public class ParkingStatus implements IParkingStatus, IParkingStatusUpdate
 		numPlacesFree += amount;
 		if (numPlacesFree > CARPARK_CAPACITY)
 			numPlacesFree = CARPARK_CAPACITY;
-		logger.info("ParkingStatus: increased free places by {} to {}", amount, numPlacesFree);
+		logger.info(lid+": increased free places by {} to {}", amount, numPlacesFree);
 	}
 
 	@Override
 	public void reset()
 	{
 		numPlacesFree = CARPARK_CAPACITY;
-		logger.info("ParkingStatus: reset");
+		logger.info(lid+": reset");
 	}
 
 }

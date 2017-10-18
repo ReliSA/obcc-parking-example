@@ -1,14 +1,17 @@
-package cz.zcu.kiv.osgi.demo.parking.carpark.statistics;
+package cz.zcu.kiv.osgi.demo.parking.carpark.statistics.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cz.zcu.kiv.osgi.demo.parking.carpark.statistics.IParkingStatistics;
 import cz.zcu.kiv.osgi.demo.parking.statsbase.CountingStatisticsAbstractBaseImpl;
 
-public class ParkingStatistics extends CountingStatisticsAbstractBaseImpl implements IParkingStatistics
+public class ParkingStatistics extends CountingStatisticsAbstractBaseImpl 
+	implements IParkingStatistics
 {
 	private static ParkingStatistics instance = null;
 	private Logger logger;
+	private static final String lid = "ParkingStatistics.r5";
 
 	int cntArrived;
 	int cntDeparted;
@@ -17,11 +20,14 @@ public class ParkingStatistics extends CountingStatisticsAbstractBaseImpl implem
 	{
 		super();
 		logger = LoggerFactory.getLogger("parking-demo");
-		logger.info("ParkingStats.r4 <init>");
+		logger.info(lid+": <init>");
 		clear();
 	}
 	
-	// fake service provisioning
+	/**
+	 * Get singleton instance.
+	 * 
+	 */
 	public static ParkingStatistics getInstance()
 	{
 		if (instance == null) {
@@ -33,19 +39,19 @@ public class ParkingStatistics extends CountingStatisticsAbstractBaseImpl implem
 	@Override
 	public String getIdentification()
 	{
-		return "ParkingStatistics";
+		return lid;
 	}
 
 	@Override
 	public int getCountVehiclesArrived()
 	{
-		logger.info("{}: getArrived {}",getIdentification(),cntArrived);
+		logger.info(lid+": getArrived {}",cntArrived);
 		return cntArrived;
 	}
 	
 	public void vehiclesArrived(int cnt)
 	{
-		logger.info("{}: newly arrived {}",getIdentification(),cnt);
+		logger.info(lid+": newly arrived {}",cnt);
 		cntArrived += cnt;
 		addToEventCount(cnt);
 	}
@@ -53,13 +59,13 @@ public class ParkingStatistics extends CountingStatisticsAbstractBaseImpl implem
 	@Override
 	public int getCountVehiclesDeparted()
 	{
-		logger.info("{}: getDeparted {}",getIdentification(),cntDeparted);
+		logger.info(lid+": getDeparted {}",cntDeparted);
 		return cntDeparted;
 	}
 	
 	public void vehiclesDeparted(int cnt)
 	{
-		logger.info("{}: newly departed {}",getIdentification(),cnt);
+		logger.info(lid+": newly departed {}",cnt);
 		cntDeparted += cnt;
 		addToEventCount(cnt);
 	}

@@ -1,10 +1,9 @@
-package cz.zcu.kiv.osgi.demo.parking.lane.statistics;
+package cz.zcu.kiv.osgi.demo.parking.lane.statistics.impl;
 
+import cz.zcu.kiv.osgi.demo.parking.lane.statistics.ILaneStatistics;
 import cz.zcu.kiv.osgi.demo.parking.statsbase.CountingStatisticsAbstractBaseImpl;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class LaneStatistics extends CountingStatisticsAbstractBaseImpl implements ILaneStatistics
 {
@@ -16,7 +15,7 @@ public class LaneStatistics extends CountingStatisticsAbstractBaseImpl implement
     private long timerStart = 0L;
 
     /**
-     * Fake service provisioning.
+     * Get singleton instance.
      */
     public static ILaneStatistics getInstance()
     {
@@ -31,12 +30,6 @@ public class LaneStatistics extends CountingStatisticsAbstractBaseImpl implement
         logger = LoggerFactory.getLogger("parking-demo");
         logger.info("LaneStats.r5 <init>");
         clear();
-    }
-
-    @Override
-    public String getIdentification()
-    {
-        return "LaneStatistics";
     }
 
     @Override
@@ -62,10 +55,18 @@ public class LaneStatistics extends CountingStatisticsAbstractBaseImpl implement
     }
 
     @Override
+    public String getIdentification()
+    {
+        return "LaneStatistics";
+    }
+
+    @Override
     public void clear()
     {
         super.clear();
         vehicleCount = 0;
+		secondsElapsed = 0;
+		timerStart = System.currentTimeMillis();
         logger.info(getIdentification() + ": counters cleared");
     }
 

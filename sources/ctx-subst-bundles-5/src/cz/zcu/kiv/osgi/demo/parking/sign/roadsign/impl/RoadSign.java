@@ -1,7 +1,9 @@
-package cz.zcu.kiv.osgi.demo.parking.sign.roadsign;
+package cz.zcu.kiv.osgi.demo.parking.sign.roadsign.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import cz.zcu.kiv.osgi.demo.parking.sign.roadsign.IRoadSign;
 
 
 public class RoadSign implements IRoadSign

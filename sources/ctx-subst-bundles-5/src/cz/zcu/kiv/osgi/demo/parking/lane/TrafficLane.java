@@ -6,13 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cz.zcu.kiv.osgi.demo.parking.gate.statistics.IGateStatistics;
-import cz.zcu.kiv.osgi.demo.parking.gate.statistics.GateStatistics;
 
-import cz.zcu.kiv.osgi.demo.parking.gate.vehiclesink.IVehicleSink;
-import cz.zcu.kiv.osgi.demo.parking.gate.vehiclesink.VehicleSink;
-import cz.zcu.kiv.osgi.demo.parking.lane.statistics.LaneStatistics;
+import cz.zcu.kiv.osgi.demo.parking.lane.statistics.ILaneStatistics;
 import cz.zcu.kiv.osgi.demo.parking.sign.roadsign.IRoadSign;
-import cz.zcu.kiv.osgi.demo.parking.sign.roadsign.RoadSign;
+import cz.zcu.kiv.osgi.demo.parking.sign.roadsign.impl.RoadSign;
 
 
 public class TrafficLane implements Runnable
@@ -20,52 +17,41 @@ public class TrafficLane implements Runnable
 
     private static final int NUM_CYCLES = 10;
     private static final long PAUSE_TIME = 300;
-    private static final int MAX_VEHICLES_IN_BATCH = 10;
+    private static final long WAIT_TIME = 100;
 
-    private LaneStatistics lane;
     private Logger logger;
+	private String lid = "TrafficLane@Lane.r5";
+	
+	LaneActivator activator = null;
 
     // dependencies
-    private IVehicleSink vehicleSink;
     private IGateStatistics gateStats;
     private IRoadSign sign;
 
-    public TrafficLane()
+    public TrafficLane(LaneActivator activator, IGateStatistics gateStats, IRoadSign sign)
     {
         logger = LoggerFactory.getLogger("parking-demo");
-        logger.info("TrafficLane.r4 <init>");
-        this.vehicleSink = VehicleSink.getInstance();
-        this.lane = (LaneStatistics) LaneStatistics.getInstance();
-        this.gateStats = GateStatistics.getInstance();
-        this.sign = RoadSign.getInstance();
+        logger.info("TrafficLane.r5 <init>");
+        this.activator = activator;
+        this.gateStats = gateStats;
+        this.sign = sign;
     }
 
     /**
-     * Simulates traffic by "injecting" vehicles into the VehicleSink.
+     * Periodically polls carpark statistics and makes the RoadSign show the free space info.
      */
     @Override
     public void run()
     {
         logger.info("(!) TrafficLane: thread starting");
-        Random r = new Random();
-        int didNotFitIn = 0;
 
-        sign.showMessage("Car park opening, places free " + gateStats.getNumFreePlaces());
-
+        ensureServicesAvailable();
+        
+        sign.switchOn();
+        
+        // better replace by "while carpark gate is open"?
         for (int i = 0; i < NUM_CYCLES; ++i) {
             logger.info("TrafficLane: loop #{}", i);
-            int batch = r.nextInt(MAX_VEHICLES_IN_BATCH);
-            logger.info("TrafficLane: Generating {} vehicles in the lane", batch);
-            for (int v = 0; v < batch; ++v) {
-                try {
-                    vehicleSink.consumeVehicle();
-                }
-                catch (IllegalStateException ise) {
-                    logger.error("TrafficLane: vehicle sink threw {}", ise.getMessage());
-                    ++didNotFitIn;
-                }
-            }
-            lane.vehiclesPassing(batch);
             sign.showMessage("PARKING FREE " + gateStats.getNumFreePlaces());
             try {
                 Thread.sleep(PAUSE_TIME);
@@ -76,7 +62,29 @@ public class TrafficLane implements Runnable
             }
             Thread.yield();
         }
-        logger.info("(!) TrafficLane: traffic simulation ended. Vehicles not parked: {}", didNotFitIn);
+        
+        sign.switchOff();
+        
+        logger.info("(!) TrafficLane: thread stopping");
     }
+
+    
+	private void ensureServicesAvailable() 
+	{
+		// check and wait for dependencies
+		// Warning: fragile -- does not handle services disappearing during runtime
+		while ((gateStats == null) || (sign == null)) {
+			logger.warn(lid+": some required service not set, waiting and trying again...");
+			try {
+				Thread.sleep(WAIT_TIME);
+			} catch (InterruptedException e) {
+				logger.warn("(!)"+lid+": thread interrupted");
+				e.printStackTrace();
+			}
+			gateStats = (gateStats == null) ? activator.getGateStatsService() : gateStats;
+			sign = (sign == null) ? activator.getRoadSignService() : sign;
+		}
+		
+	}
 
 }
